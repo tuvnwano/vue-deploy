@@ -23,4 +23,3 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           APP_SOURCE_CODE: ./dist
-          BUILD_COMMAND: "npm run build"
