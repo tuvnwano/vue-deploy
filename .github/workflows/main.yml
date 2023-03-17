@@ -16,10 +16,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Deploying application to Amazon S3
-        uses: aws-actions/configure-aws-credentials@v1
-        id: S3
+        uses: lewandy/vue-s3-deployer@main
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-bucket: ${{ secrets.AWS_BUCKET_NAME }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          APP_SOURCE_CODE: ./
+          BUILD_COMMAND: "npm run build"
