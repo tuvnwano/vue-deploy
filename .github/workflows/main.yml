@@ -23,12 +23,26 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Deploying application to Amazon S3
-        uses: shallwefootball/s3-upload-action@master
-        id: S3
+      - name: Cache modules
+        uses: actions/cache@v1
+        id: yarn-cache
         with:
-          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          aws_bucket: ${{ secrets.AWS_BUCKET_NAME }}
-          source_dir: ./dist
+          path: node_modules 
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Deploy
+        run: aws s3 sync ./dist s3://vite-tu-deploy
